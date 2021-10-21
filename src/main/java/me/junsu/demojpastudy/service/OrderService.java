@@ -2,6 +2,7 @@ package me.junsu.demojpastudy.service;
 
 import lombok.RequiredArgsConstructor;
 import me.junsu.demojpastudy.domain.Order;
+import me.junsu.demojpastudy.repository.OrderQueryDto;
 import me.junsu.demojpastudy.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,5 +19,9 @@ public class OrderService {
 
     public List<Order> findAllWithMemberDelivery() {
         return orderRepository.findAllWithMemberDelivery();
+    }
+
+    public List<OrderQueryDto> findOrderQueryDto() {
+        return orderRepository.findOrderQueryDto();
     }
 }
