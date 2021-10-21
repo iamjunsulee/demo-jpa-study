@@ -55,7 +55,7 @@ public class InitDb {
             em.persist(delivery2);
 
             //주문생성
-            Order order = Order.createOrder(member, delivery, orderItem1, orderItem2);
+            Order order = Order.createOrder(member, delivery, orderItem2);
             em.persist(order);
 
             Order order2 = Order.createOrder(member2, delivery2, orderItem1, orderItem3);

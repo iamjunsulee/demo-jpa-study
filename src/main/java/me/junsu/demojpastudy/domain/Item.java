@@ -2,6 +2,7 @@ package me.junsu.demojpastudy.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Item {
     @Id @GeneratedValue
     @Column(name = "item_id")

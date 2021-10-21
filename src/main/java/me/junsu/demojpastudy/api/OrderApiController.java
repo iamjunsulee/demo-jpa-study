@@ -1,14 +1,18 @@
 package me.junsu.demojpastudy.api;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.junsu.demojpastudy.domain.Address;
 import me.junsu.demojpastudy.domain.Order;
+import me.junsu.demojpastudy.domain.OrderItem;
+import me.junsu.demojpastudy.domain.OrderStatus;
 import me.junsu.demojpastudy.repository.OrderQueryDto;
 import me.junsu.demojpastudy.service.OrderService;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +21,7 @@ import java.util.stream.Collectors;
 public class OrderApiController {
     private final OrderService orderService;
 
-    @GetMapping("/api/v1/orders")
+    @GetMapping("/api/v1/simple-orders")
     public List<Order> getOrders() {
         return orderService.findAll();
         //무한루프에 빠지게 된다.
@@ -27,7 +31,7 @@ public class OrderApiController {
         //지연로딩으로 인해 오류 발생. 지연 로딩은 프록시 객체를 생성하는데, json이 이 프록시 객체를 인식하지 못해서 문제가 생김.
     }
 
-    @GetMapping("/api/v2/orders")
+    @GetMapping("/api/v2/simple-orders")
     public List<OrderQueryDto> getOrdersVer2() {
         //엔티티를 DTO로 변환하는 방법
         //N + 1 문제에 빠진다.
@@ -42,7 +46,7 @@ public class OrderApiController {
         return orders.stream().map(o -> new OrderQueryDto(o.getId(), o.getMember().getName(), o.getOrderStatus(), o.getOrderDate(), o.getDelivery().getAddress())).collect(Collectors.toList());
     }
 
-    @GetMapping("/api/v3/orders")
+    @GetMapping("/api/v3/simple-orders")
     public List<OrderQueryDto> getOrdersVer3() {
         //fetch join을 사용하는 방법
         //쿼리 한 번에 다 조회하므로 지연로딩 신경 쓸 필요 없음.
@@ -50,7 +54,7 @@ public class OrderApiController {
         return orders.stream().map(o -> new OrderQueryDto(o.getId(), o.getMember().getName(), o.getOrderStatus(), o.getOrderDate(), o.getDelivery().getAddress())).collect(Collectors.toList());
     }
 
-    @GetMapping("/api/v4/orders")
+    @GetMapping("/api/v4/simple-orders")
     public List<OrderQueryDto> getOrdersVer4() {
         //리포지토리에서 바로 DTO를 조회하는 방법
         //new 명령어를 통해서 JPQL의 결과를 바로 DTO로 변환
@@ -58,5 +62,45 @@ public class OrderApiController {
         //리포지토리에서 재사용성이 떨어진다.
         // Api 스펙에 맞춘 코드가 리포지토리에 들어가게 된다. -> 리포지토리는 엔티티에 대한 객체 그래프 탐색에 이용되야 되는데 Api 스펙에 맞춰 사용이 됨
         return orderService.findOrderQueryDto();
+    }
+
+    @GetMapping("/api/v2/orders")
+    public List<OrderDto> getOrdersWithCollection() {
+        List<Order> orders = orderService.findAll();
+        return orders.stream().map(OrderDto::new).collect(Collectors.toList());
+    }
+
+    @Getter
+    static class OrderDto {
+
+        private Long orderId;
+        private String name;
+        private OrderStatus orderStatus;
+        private LocalDateTime orderDate;
+        private Address address;
+        private List<OrderItemDto> orderItems;
+        //private List<OrderItem> orderItems;  엔티티를 노출하면 안됨.
+
+        public OrderDto(Order order) {
+            orderId = order.getId();
+            name = order.getMember().getName();
+            orderStatus = order.getOrderStatus();
+            orderDate = order.getOrderDate();
+            address = order.getDelivery().getAddress();
+            orderItems = order.getOrderItems().stream().map(OrderItemDto::new).collect(Collectors.toList());
+        }
+    }
+
+    @Getter
+    static class OrderItemDto {
+        private String itemName;
+        private int orderPrice;
+        private int orderQuantity;
+
+        public OrderItemDto(OrderItem orderItem) {
+            itemName = orderItem.getItem().getName();
+            orderPrice = orderItem.getOrderPrice();
+            orderQuantity = orderItem.getOrderQuantity();
+        }
     }
 }

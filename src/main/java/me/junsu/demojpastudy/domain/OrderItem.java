@@ -1,15 +1,14 @@
 package me.junsu.demojpastudy.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Arrays;
 
 @Entity
 @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem {
     @Id @GeneratedValue
