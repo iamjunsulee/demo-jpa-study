@@ -2,12 +2,14 @@ package me.junsu.demojpastudy.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Delivery {
     @Id @GeneratedValue
     @Column(name = "delivery_id")

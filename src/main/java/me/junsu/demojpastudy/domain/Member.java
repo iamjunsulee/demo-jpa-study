@@ -1,5 +1,6 @@
 package me.junsu.demojpastudy.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class Member {
     }
 
     //연관관계의 주인이 아님을 명시
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 }
