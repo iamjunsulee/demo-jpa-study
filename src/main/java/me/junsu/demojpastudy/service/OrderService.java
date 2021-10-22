@@ -24,4 +24,8 @@ public class OrderService {
     public List<OrderQueryDto> findOrderQueryDto() {
         return orderRepository.findOrderQueryDto();
     }
+
+    public List<Order> findAllWithOrderItem() {
+        return orderRepository.findAllWithOrderItem();
+    }
 }

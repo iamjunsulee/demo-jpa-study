@@ -25,12 +25,14 @@ public class InitDb {
         private final EntityManager em;
 
         public void initDb() {
-            Item item1 = new Item("JPA Book1", 100, 10000);
-            Item item2 = new Item("JPA Book2", 100,20000);
-            Item item3 = new Item("JPA Book3", 50, 25000);
+            Item item1 = new Item("Spring Book", 100, 10000);
+            Item item2 = new Item("Summer Book", 100,20000);
+            Item item3 = new Item("Fall Book", 50, 25000);
+            Item item4 = new Item("Winter Book", 50, 30000);
             em.persist(item1);
             em.persist(item2);
             em.persist(item3);
+            em.persist(item4);
 
             Address address1 = new Address("서울특별시", "마포구 마포대로", "04413");
             Address address2 = new Address("부산광역시", "금정구", "01111");
@@ -41,12 +43,14 @@ public class InitDb {
             em.persist(member2);
 
             //주문상품 생성
-            OrderItem orderItem1 = OrderItem.createOrderItem(item1, 10000,2);
-            OrderItem orderItem2 = OrderItem.createOrderItem(item2, 20000,1);
-            OrderItem orderItem3 = OrderItem.createOrderItem(item3, 25000,1);
+            OrderItem orderItem1 = OrderItem.createOrderItem(item1, 10000,1);
+            OrderItem orderItem2 = OrderItem.createOrderItem(item2, 20000,2);
+            OrderItem orderItem3 = OrderItem.createOrderItem(item3, 25000,3);
+            OrderItem orderItem4 = OrderItem.createOrderItem(item4, 30000,4);
             em.persist(orderItem1);
             em.persist(orderItem2);
             em.persist(orderItem3);
+            em.persist(orderItem4);
 
             //배송생성
             Delivery delivery = new Delivery(address1);
@@ -55,7 +59,7 @@ public class InitDb {
             em.persist(delivery2);
 
             //주문생성
-            Order order = Order.createOrder(member, delivery, orderItem2);
+            Order order = Order.createOrder(member, delivery, orderItem4, orderItem2);
             em.persist(order);
 
             Order order2 = Order.createOrder(member2, delivery2, orderItem1, orderItem3);

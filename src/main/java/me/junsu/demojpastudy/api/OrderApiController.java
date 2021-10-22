@@ -65,8 +65,14 @@ public class OrderApiController {
     }
 
     @GetMapping("/api/v2/orders")
-    public List<OrderDto> getOrdersWithCollection() {
+    public List<OrderDto> getOrdersWithCollectionVer2() {
         List<Order> orders = orderService.findAll();
+        return orders.stream().map(OrderDto::new).collect(Collectors.toList());
+    }
+
+    @GetMapping("/api/v3/orders")
+    public List<OrderDto> getOrdersWithCollectionVer3() {
+        List<Order> orders = orderService.findAllWithOrderItem();
         return orders.stream().map(OrderDto::new).collect(Collectors.toList());
     }
 
