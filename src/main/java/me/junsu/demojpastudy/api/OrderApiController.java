@@ -76,6 +76,17 @@ public class OrderApiController {
         return orders.stream().map(OrderDto::new).collect(Collectors.toList());
     }
 
+    @GetMapping("/api/v3_1/orders")
+    public List<OrderDto> getOrdersWithCollectionVer3_1() {
+        //컬렉션의 경우, fetch 조인을 사용하면 페이징을 쓸수가 없다.
+        //xToOme 관계에서 fetch 조인해도 페이징 결과에는 영향을 주지 않는다.
+        //따라서XtoOne 관계는 fetch 조인으로 쿼리 수를 줄이고, 컬렉션 타입은 지연로딩을 사용한다.
+        //단 이 방법에서 성능을 최적화하려면 spring.jpa.properties.hibernate.default_batch_fetch_size 설정을 하거나
+        //개별적으로 설정하려면 @BetchSize 어노테이션을 사용한다.
+        List<Order> orders = orderService.findAllWithMemberDelivery();
+        return orders.stream().map(OrderDto::new).collect(Collectors.toList());
+    }
+
     @Getter
     static class OrderDto {
 
