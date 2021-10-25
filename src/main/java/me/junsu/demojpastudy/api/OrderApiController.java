@@ -92,6 +92,11 @@ public class OrderApiController {
         return orderService.findOrderQueryDto();
     }
 
+    @GetMapping("/api/v5/orders")
+    public List<OrderQueryDto> getOrdersWithCollectionVer5() {
+        return orderService.findOrderQueryDto2();
+    }
+
     @Getter
     static class OrderDto {
 
