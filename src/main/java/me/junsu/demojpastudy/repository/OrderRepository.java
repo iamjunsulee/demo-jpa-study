@@ -11,8 +11,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("select o from Order o join fetch o.member m join fetch o.delivery d")
     List<Order> findAllWithMemberDelivery();
 
-    @Query("select new me.junsu.demojpastudy.repository.OrderQueryDto(o.id, m.name, o.orderStatus, o.orderDate, d.address) from Order o join o.member m join o.delivery d")
-    List<OrderQueryDto> findOrderQueryDto();
+    @Query("select new me.junsu.demojpastudy.repository.SimpleOrderDto(o.id, m.name, o.orderStatus, o.orderDate, d.address) from Order o join o.member m join o.delivery d")
+    List<SimpleOrderDto> findSimpleOrderDto();
 
     //distinct 키워드 사용
     //fetch join도 조인이기 때문에 1 대 다 인 경우, 다의 row 수 만큼 나오게 된다.
