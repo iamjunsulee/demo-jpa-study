@@ -25,10 +25,10 @@ public class InitDb {
         private final EntityManager em;
 
         public void initDb() {
-            Item item1 = new Item("Spring Book", 100, 10000);
-            Item item2 = new Item("Summer Book", 100,20000);
-            Item item3 = new Item("Fall Book", 50, 25000);
-            Item item4 = new Item("Winter Book", 50, 30000);
+            Book item1 = new Book("Spring Book", 100, 10000, "lee");
+            Book item2 = new Book("Summer Book", 100,20000, "lee");
+            Book item3 = new Book("Fall Book", 50, 25000, "lee");
+            Book item4 = new Book("Winter Book", 50, 30000, "lee");
             em.persist(item1);
             em.persist(item2);
             em.persist(item3);

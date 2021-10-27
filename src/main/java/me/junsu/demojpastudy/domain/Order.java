@@ -57,7 +57,7 @@ public class Order {
     /*  연관관계 편의 메서드 */
     public void setMember(Member member) {
         if (this.member != null) {
-            this.member.getOrders().remove(this);
+            this.member.getOrders().remove(this);   //기존 팀과의 관계를 제거
         }
         this.member = member;
         member.getOrders().add(this);
