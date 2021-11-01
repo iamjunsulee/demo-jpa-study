@@ -7,13 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;            //회원번호
@@ -27,6 +28,7 @@ public class Member {
     public Member(String name, Address address) {
         this.name = name;
         this.address = address;
+        this.createDate = LocalDateTime.now();
     }
 
     //연관관계의 주인이 아님을 명시
