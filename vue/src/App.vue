@@ -3,7 +3,10 @@
     <nav class="navbar navbar-expand navbar-dark bg-dark">
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
-          <router-link to="/api/v2/members" class="nav-link">Members</router-link>
+          <router-link to="/members" class="nav-link">Members</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/add" class="nav-link">Join</router-link>
         </li>
       </div>
     </nav>
@@ -18,7 +21,7 @@
 
 export default {
   name: 'App'
-}
+};
 </script>
 
 <style>

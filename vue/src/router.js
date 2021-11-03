@@ -7,9 +7,14 @@ export default new Router({
     mode: "history",
     routes: [
         {
-            path: "/api/v2/members",
+            path: "/members",
             name: "members",
             component: () => import("./components/MembersList")
+        },
+        {
+            path: "/add",
+            name: "add",
+            component: () => import("./components/MemberJoin")
         }
     ]
 });

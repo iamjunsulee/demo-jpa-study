@@ -18,7 +18,7 @@
         <h4>Members</h4>
         <div>
           <label><strong>Name:</strong></label> {{ currentMember.name }}<br>
-          <label><strong>City:</strong></label> {{ currentMember.address.city }} {{ currentMember.address.street }} {{ currentMember.address.zipcode }}
+          <label><strong>Address:</strong></label> {{ currentMember.address.city }} {{ currentMember.address.street }} {{ currentMember.address.zipcode }}
         </div>
       </div>
     </div>
