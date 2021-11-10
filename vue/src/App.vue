@@ -8,6 +8,9 @@
         <li class="nav-item">
           <router-link to="/add" class="nav-link">Join</router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/addItem" class="nav-link">Item</router-link>
+        </li>
       </div>
     </nav>
 
