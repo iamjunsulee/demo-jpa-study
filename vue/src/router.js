@@ -20,6 +20,11 @@ export default new Router({
             path: "/addItem",
             name: "addItem",
             component: () => import("./components/AddItem")
+        },
+        {
+            path: "/items",
+            name: "items",
+            component: () => import("./components/ItemsList")
         }
     ]
 });

@@ -3,13 +3,16 @@
     <nav class="navbar navbar-expand navbar-dark bg-dark">
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
-          <router-link to="/members" class="nav-link">Members</router-link>
+          <router-link to="/members" class="nav-link">회원목록</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/add" class="nav-link">Join</router-link>
+          <router-link to="/add" class="nav-link">회원등록</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/addItem" class="nav-link">Item</router-link>
+          <router-link to="/addItem" class="nav-link">상품등록</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/items" class="nav-link">상품목록</router-link>
         </li>
       </div>
     </nav>

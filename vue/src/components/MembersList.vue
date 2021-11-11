@@ -1,7 +1,7 @@
 <template>
   <div class="list row">
     <div class="col-md-6">
-      <h4>Members List</h4>
+      <h4>회원 목록</h4>
       <ul class="list-group">
         <li class="list-group-item"
             :class="{ active: index == currentIndex }"
