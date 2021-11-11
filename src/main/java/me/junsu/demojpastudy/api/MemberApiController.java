@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import me.junsu.demojpastudy.domain.Address;
 import me.junsu.demojpastudy.domain.Member;
 import me.junsu.demojpastudy.service.MemberService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,6 +49,13 @@ public class MemberApiController {
 
         return new Result<>(collect.size(), collect);
         //별도의 Result 클래스를 생성해서 사용하면 API 스펙 변경에 유연하다.
+    }
+
+    @GetMapping("/api/members/{name}")
+    public Result<MemberDto> getMemberById(@PathVariable String name) {
+        Member member = memberService.findByName(name);
+        MemberDto memberDto = new MemberDto(member.getId(), member.getName(), member.getAddress());
+        return new Result<>(1, memberDto);
     }
 
     @Data

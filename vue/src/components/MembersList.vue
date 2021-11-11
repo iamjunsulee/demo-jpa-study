@@ -1,5 +1,10 @@
 <template>
   <div class="list row">
+    <div class="col-9">
+      <input id="name" class="form-control" placeholder="검색할 이름을 입력하세요" v-model="name">
+      <button class="btn btn-dark" @click="searchByName">검색</button>
+    </div>
+
     <div class="col-md-6">
       <h4>회원 목록</h4>
       <ul class="list-group">
@@ -48,7 +53,16 @@ export default {
             console.log(e);
           });
     },
-
+    searchByName() {
+      MemberDataService.findByName(this.name)
+      .then(response => {
+        this.members = response.data.data;
+        //this.setActiveMember(null);
+      })
+      .catch(e => {
+        console.log(e);
+      })
+    },
     refreshList() {
       this.retrieveTutorials();
       this.currentMember = null;

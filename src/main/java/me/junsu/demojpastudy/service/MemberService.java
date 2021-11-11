@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +25,9 @@ public class MemberService {
 
     public List<Member> findAll() {
         return memberRepository.findAll();
+    }
+
+    public Member findByName(String name) {
+        return memberRepository.findByName(name);
     }
 }
