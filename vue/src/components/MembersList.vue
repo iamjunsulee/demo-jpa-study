@@ -1,17 +1,21 @@
 <template>
   <div class="list row">
-    <div class="col-9">
-      <input id="name" class="form-control" placeholder="검색할 이름을 입력하세요" v-model="name">
-      <button class="btn btn-dark" @click="searchByName">검색</button>
+    <div class="col-md-8">
+      <div class="input-group mb-3">
+        <input type="text" id="name" class="form-control" placeholder="검색할 이름을 입력하세요" v-model="name">
+        <div class="input-group-prepend">
+          <button type="button" class="btn btn-outline-secondary" @click="searchByName">검색</button>
+        </div>
+      </div>
     </div>
 
     <div class="col-md-6">
       <h4>회원 목록</h4>
       <ul class="list-group">
         <li class="list-group-item"
-            :class="{ active: index == currentIndex }"
+            :class="{ active: index === currentIndex }"
             v-for="(member, index) in members"
-            :key="member.id"
+            :key="index"
             @click="setActiveMember(member, index)"
         >
           {{ member.name }}
@@ -39,7 +43,8 @@ export default {
     return {
       members: [],
       currentMember: null,
-      currentIndex: -1
+      currentIndex: -1,
+      name: ""
     };
   },
   methods: {
@@ -53,25 +58,20 @@ export default {
             console.log(e);
           });
     },
-    searchByName() {
-      MemberDataService.findByName(this.name)
-      .then(response => {
-        this.members = response.data.data;
-        //this.setActiveMember(null);
-      })
-      .catch(e => {
-        console.log(e);
-      })
-    },
-    refreshList() {
-      this.retrieveTutorials();
-      this.currentMember = null;
-      this.currentIndex = -1;
-    },
-
     setActiveMember(member, index) {
       this.currentMember = member;
       this.currentIndex = index;
+    },
+    searchByName() {
+      MemberDataService.findByName(this.name)
+          .then(response => {
+            this.members = response.data.data;
+            this.setActiveMember(null, -1);
+            console.log(response.data);
+          })
+          .catch(e => {
+            console.log(e);
+          })
     }
   },
   mounted() {
