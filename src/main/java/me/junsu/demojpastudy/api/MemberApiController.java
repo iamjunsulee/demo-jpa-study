@@ -8,6 +8,7 @@ import me.junsu.demojpastudy.domain.Member;
 import me.junsu.demojpastudy.service.MemberService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,10 +53,12 @@ public class MemberApiController {
     }
 
     @GetMapping("/api/members/{name}")
-    public Result<MemberDto> getMemberById(@PathVariable String name) {
+    public Result<List<MemberDto>> getMemberById(@PathVariable String name) {
         Member member = memberService.findByName(name);
         MemberDto memberDto = new MemberDto(member.getId(), member.getName(), member.getAddress());
-        return new Result<>(1, memberDto);
+        List<MemberDto> collect = new ArrayList<>();
+        collect.add(memberDto);
+        return new Result<>(1, collect);
     }
 
     @Data
