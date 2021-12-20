@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,5 +60,11 @@ public class OrderService {
         orders.forEach(o -> o.setOrderItems(orderItemMap.get(o.getOrderId())));
 
         return orders;
+    }
+
+    //주문취소
+    public void cancelOrder(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        order.cancel();
     }
 }

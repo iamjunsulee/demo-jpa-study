@@ -33,4 +33,15 @@ public class OrderItem {
         orderItem.setOrderQuantity(orderQuantity);
         return orderItem;
     }
+
+    /* 비지니스 메소드 */
+    //주문취소
+    public void cancel() {
+        getItem().addStock(orderQuantity);
+    }
+
+    //가격조회
+    public int getTotalPrice() {
+        return getOrderPrice() * orderQuantity;
+    }
 }
