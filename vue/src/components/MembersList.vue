@@ -1,37 +1,24 @@
 <template>
-  <div class="list row">
-    <div class="col-md-8">
-      <div class="input-group mb-3">
-        <input type="text" id="name" class="form-control" placeholder="검색할 이름을 입력하세요" v-model="name">
-        <div class="input-group-prepend">
-          <button type="button" class="btn btn-outline-secondary" @click="searchByName">검색</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6">
-      <h4>회원 목록</h4>
-      <ul class="list-group">
-        <li class="list-group-item"
-            :class="{ active: index === currentIndex }"
-            v-for="(member, index) in members"
-            :key="index"
-            @click="setActiveMember(member, index)"
-        >
-          {{ member.name }}
-        </li>
-      </ul>
-    </div>
-    <div class="col-md-6">
-      <div v-if="currentMember">
-        <h4>Members</h4>
-        <div>
-          <label><strong>Name:</strong></label> {{ currentMember.name }}<br>
-          <label><strong>Address:</strong></label> {{ currentMember.address.city }} {{ currentMember.address.street }} {{ currentMember.address.zipcode }}
-        </div>
-      </div>
-    </div>
-  </div>
+  <v-card>
+    <v-card-title>
+      Members
+      <v-spacer></v-spacer>
+      <v-text-field
+          v-model="searchName"
+          append-icon="mdi-magnify"
+          label="search"
+          single-line
+          hide-details
+      ></v-text-field>
+    </v-card-title>
+    <v-data-table
+        :headers="headers"
+        :items="members"
+        :search="searchName"
+        disable-pagination
+        :hide-default-footer="true"
+    ></v-data-table>
+  </v-card>
 </template>
 
 <script>
@@ -44,11 +31,17 @@ export default {
       members: [],
       currentMember: null,
       currentIndex: -1,
-      name: ""
+      searchName: "",
+      headers: [
+        { text: "Name", align: "start", sortable: false, value: "name" },
+        { text: "City", value: "address.city", sortable: false },
+        { text: "Street", value: "address.street", sortable: false },
+        { text: "Zipcode", value: "address.zipcode", sortable: false }
+      ]
     };
   },
   methods: {
-    retrieveTutorials() {
+    retrieveMembers() {
       MemberDataService.getAll()
           .then(response => {
             this.members = response.data.data;
@@ -75,7 +68,7 @@ export default {
     }
   },
   mounted() {
-    this.retrieveTutorials();
+    this.retrieveMembers();
   }
 };
 </script>
