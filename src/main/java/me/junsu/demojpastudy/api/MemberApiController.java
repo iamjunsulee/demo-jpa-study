@@ -54,10 +54,8 @@ public class MemberApiController {
 
     @GetMapping("/api/members/{name}")
     public Result<List<MemberDto>> getMemberById(@PathVariable String name) {
-        Member member = memberService.findByName(name);
-        MemberDto memberDto = new MemberDto(member.getId(), member.getName(), member.getAddress());
-        List<MemberDto> collect = new ArrayList<>();
-        collect.add(memberDto);
+        List<Member> memberList = memberService.findByName(name);
+        List<MemberDto> collect = memberList.stream().map(m -> new MemberDto(m.getId(), m.getName(), m.getAddress())).collect(Collectors.toList());
         return new Result<>(1, collect);
     }
 
