@@ -59,6 +59,14 @@ public class MemberApiController {
         return new Result<>(1, collect);
     }
 
+    @DeleteMapping("/api/members/{id}")
+    public Result<List<MemberDto>> deleteMember(@PathVariable Long id) {
+        memberService.deleteById(id);
+        List<Member> members = memberService.findAll();
+        List<MemberDto> collect = members.stream().map(m -> new MemberDto(m.getId(), m.getName(), m.getAddress())).collect(Collectors.toList());
+        return new Result<>(collect.size(), collect);
+    }
+
     @Data
     @AllArgsConstructor
     static class Result<T> {

@@ -8,7 +8,10 @@ class MemberDataService {
         return http.post("/api/v2/members", data);
     }
     findByName(name) {
-        return http.get(`/api/members/${name}`)
+        return http.get(`/api/members/${name}`);
+    }
+    deleteMember(id) {
+        return http.delete(`/api/members/${id}`);
     }
 }
 export default new MemberDataService();

@@ -36,11 +36,23 @@ public class InitDb {
 
             Address address1 = new Address("서울특별시", "마포구 마포대로", "04413");
             Address address2 = new Address("부산광역시", "금정구", "01111");
+            Address address3 = new Address("서울특별시", "마포구", "01112");
+            Address address4 = new Address("서울특별시", "강서구", "01113");
+            Address address5 = new Address("서울특별시", "강남구", "01114");
+            Address address6 = new Address("서울특별시", "금정구", "01115");
             //회원 생성
             Member member = new Member("이준수", address1);
             Member member2 = new Member("삼준수", address2);
+            Member member3 = new Member("사준수", address3);
+            Member member4 = new Member("오준수", address4);
+            Member member5 = new Member("육준수", address5);
+            Member member6 = new Member("칠준수", address6);
             em.persist(member);
             em.persist(member2);
+            em.persist(member3);
+            em.persist(member4);
+            em.persist(member5);
+            em.persist(member6);
 
             //주문상품 생성
             OrderItem orderItem1 = OrderItem.createOrderItem(item1, 10000,1);

@@ -30,4 +30,6 @@ public class MemberService {
     public List<Member> findByName(String name) {
         return memberRepository.findByName(name);
     }
+
+    public void deleteById(Long id) { memberRepository.deleteById(id);}
 }

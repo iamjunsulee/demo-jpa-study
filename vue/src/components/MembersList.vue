@@ -1,24 +1,31 @@
 <template>
-  <v-card>
-    <v-card-title>
-      Members
-      <v-spacer></v-spacer>
-      <v-text-field
-          v-model="searchName"
-          append-icon="mdi-magnify"
-          label="search"
-          single-line
-          hide-details
-      ></v-text-field>
-    </v-card-title>
-    <v-data-table
-        :headers="headers"
-        :items="members"
-        :search="searchName"
-        disable-pagination
-        :hide-default-footer="true"
-    ></v-data-table>
-  </v-card>
+  <v-row align="center" class="list px-3 mx-auto">
+    <v-col cols="12" sm="8">
+      <v-text-field v-model="searchName" label="Search by Name"></v-text-field>
+    </v-col>
+    <v-col cols="12" sm="4">
+      <v-btn @click="searchByName();">
+        Search
+      </v-btn>
+    </v-col>
+    <v-col cols="12" sm="12">
+      <v-card>
+        <v-card-title>Members</v-card-title>
+        <v-data-table
+            :headers="headers"
+            :items="members"
+            disable-pagination
+            :hide-default-footer="true"
+        >
+          <template v-slot:[`item.actions`]="{ item }">
+            <v-icon small @click="deleteMember(item.id)">
+              mdi-delete
+            </v-icon>
+          </template>
+        </v-data-table>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -36,7 +43,8 @@ export default {
         { text: "Name", align: "start", sortable: false, value: "name" },
         { text: "City", value: "address.city", sortable: false },
         { text: "Street", value: "address.street", sortable: false },
-        { text: "Zipcode", value: "address.zipcode", sortable: false }
+        { text: "Zipcode", value: "address.zipcode", sortable: false },
+        { text: "Actions", value: "actions", sortable: false },
       ]
     };
   },
@@ -56,7 +64,7 @@ export default {
       this.currentIndex = index;
     },
     searchByName() {
-      MemberDataService.findByName(this.name)
+      MemberDataService.findByName(this.searchName)
           .then(response => {
             this.members = response.data.data;
             this.setActiveMember(null, -1);
@@ -65,6 +73,16 @@ export default {
           .catch(e => {
             console.log(e);
           })
+    },
+    deleteMember(id) {
+      MemberDataService.deleteMember(id)
+          .then(response => {
+            this.members = response.data.data;
+            console.log(response.data);
+          })
+          .catch(e => {
+            console.log(e);
+          });
     }
   },
   mounted() {
