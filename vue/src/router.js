@@ -12,8 +12,8 @@ export default new Router({
             component: () => import("./components/MembersList")
         },
         {
-            path: "/add",
-            name: "add",
+            path: "/join",
+            name: "join",
             component: () => import("./components/MemberJoin")
         },
         {
@@ -25,6 +25,11 @@ export default new Router({
             path: "/items",
             name: "items",
             component: () => import("./components/ItemsList")
+        },
+        {
+            path: "/modifyMember",
+            name: "member-details",
+            component: () => import("./components/Member")
         }
     ]
 });

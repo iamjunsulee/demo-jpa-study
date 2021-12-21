@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import me.junsu.demojpastudy.domain.Address;
 import me.junsu.demojpastudy.domain.Member;
 import me.junsu.demojpastudy.service.MemberService;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,19 +19,19 @@ public class MemberApiController {
     private final MemberService memberService;
 
     @PostMapping("/api/v1/members")
-    public CreateMemberResponse saveMemberVer1(@RequestBody Member member) {
+    public MemberResponse saveMemberVer1(@RequestBody Member member) {
         Long savedId = memberService.save(member);
-        return new CreateMemberResponse(savedId);
+        return new MemberResponse(savedId);
         //api 요청 스펙에 맞춰서 별도의 DTO를 작성하는 것이 좋다.
         //Entity를 외부에 노출해선 안된다.
     }
 
     @PostMapping("/api/v2/members")
-    public CreateMemberResponse saveMemberVer2(@RequestBody CreateMemberRequest request) {
+    public MemberResponse saveMemberVer2(@RequestBody MemberRequest request) {
         System.out.println(request.getAddress());
         Member member = new Member(request.getName(), request.getAddress());
         Long savedId = memberService.save(member);
-        return new CreateMemberResponse(savedId);
+        return new MemberResponse(savedId);
     }
 
     @GetMapping("/api/v1/members")
@@ -43,28 +44,47 @@ public class MemberApiController {
     }
 
     @GetMapping("/api/v2/members")
-    public Result<List<MemberDto>> getMembersV2() {
-        List<Member> all = memberService.findAll();
-        List<MemberDto> collect = all.stream()
-                .map(m -> new MemberDto(m.getId(), m.getName(), m.getAddress())).collect(Collectors.toList());
+    public Result<List<MemberDto>> getMembersV2(@RequestParam(required = false) String name) {
+        List<Member> memberList = new ArrayList<>();
+        if (name == null || name.trim().isEmpty()) {
+            memberList = memberService.findAll();
+        }
+        else {
+            memberList = memberService.findByName(name);
+        }
 
-        return new Result<>(collect.size(), collect);
+        List<MemberDto> result = memberList.stream()
+                .map(m -> new MemberDto(m.getId(), m.getName(), m.getAddress())).collect(Collectors.toList());
+        return new Result<>(result.size(), result);
         //별도의 Result 클래스를 생성해서 사용하면 API 스펙 변경에 유연하다.
     }
 
-    @GetMapping("/api/members/{name}")
-    public Result<List<MemberDto>> getMemberById(@PathVariable String name) {
-        List<Member> memberList = memberService.findByName(name);
-        List<MemberDto> collect = memberList.stream().map(m -> new MemberDto(m.getId(), m.getName(), m.getAddress())).collect(Collectors.toList());
-        return new Result<>(1, collect);
-    }
+//    @GetMapping("/api/members/{name}")
+//    public Result<List<MemberDto>> getMemberByName(@PathVariable String name) {
+//        List<Member> memberList = memberService.findByName(name);
+//        List<MemberDto> collect = memberList.stream().map(m -> new MemberDto(m.getId(), m.getName(), m.getAddress())).collect(Collectors.toList());
+//        return new Result<>(1, collect);
+//    }
 
     @DeleteMapping("/api/members/{id}")
-    public Result<List<MemberDto>> deleteMember(@PathVariable Long id) {
+    public void deleteMember(@PathVariable Long id) {
         memberService.deleteById(id);
-        List<Member> members = memberService.findAll();
-        List<MemberDto> collect = members.stream().map(m -> new MemberDto(m.getId(), m.getName(), m.getAddress())).collect(Collectors.toList());
-        return new Result<>(collect.size(), collect);
+    }
+
+    @GetMapping("/api/members/{id}")
+    public Result<MemberDto> getMemberById(@PathVariable Long id) {
+        Member member = memberService.findById(id);
+        MemberDto memberDto = new MemberDto(member.getId(), member.getName(), member.getAddress());
+        return new Result<>(1, memberDto);
+    }
+
+    @PutMapping("/api/members/{id}")
+    public MemberResponse updateMember(@PathVariable Long id, @RequestBody MemberRequest request) {
+        Member member = memberService.findById(id);
+        member.setAddress(request.getAddress());
+        member.setName(request.getName());
+        Long updateId = memberService.save(member);
+        return new MemberResponse(updateId);
     }
 
     @Data
@@ -84,12 +104,12 @@ public class MemberApiController {
 
     @Data
     @AllArgsConstructor
-    static class CreateMemberResponse {
+    static class MemberResponse {
         private Long id;
     }
 
     @Data
-    static class CreateMemberRequest {
+    static class MemberRequest {
         private String name;
         private Address address;
     }

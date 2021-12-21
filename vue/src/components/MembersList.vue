@@ -18,9 +18,8 @@
             :hide-default-footer="true"
         >
           <template v-slot:[`item.actions`]="{ item }">
-            <v-icon small @click="deleteMember(item.id)">
-              mdi-delete
-            </v-icon>
+            <v-icon small class="mx-2" @click="updateMember(item.id)">mdi-pencil</v-icon>
+            <v-icon small @click="deleteMember(item.id)">mdi-delete</v-icon>
           </template>
         </v-data-table>
       </v-card>
@@ -59,6 +58,9 @@ export default {
             console.log(e);
           });
     },
+    refreshList() {
+      this.retrieveMembers();
+    },
     setActiveMember(member, index) {
       this.currentMember = member;
       this.currentIndex = index;
@@ -68,17 +70,19 @@ export default {
           .then(response => {
             this.members = response.data.data;
             this.setActiveMember(null, -1);
-            console.log(response.data);
+            console.log(response.data.data);
           })
           .catch(e => {
             console.log(e);
           })
     },
+    updateMember(id) {
+      this.$router.push({ name: "member-details", params: { id: id } });
+    },
     deleteMember(id) {
       MemberDataService.deleteMember(id)
-          .then(response => {
-            this.members = response.data.data;
-            console.log(response.data);
+          .then(() => {
+            this.refreshList();
           })
           .catch(e => {
             console.log(e);
