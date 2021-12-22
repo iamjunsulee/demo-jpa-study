@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,5 +23,13 @@ public class ItemService {
 
     public List<Item> getAllItems() {
         return itemRepository.findAll();
+    }
+
+    public void deleteById(Long id) {
+        itemRepository.deleteById(id);
+    }
+
+    public Item findById(Long id) {
+        return itemRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 }

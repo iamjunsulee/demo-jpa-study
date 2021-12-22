@@ -30,6 +30,11 @@ export default new Router({
             path: "/modifyMember",
             name: "member-details",
             component: () => import("./components/Member")
-        }
+        },
+        {
+            path: "/modifyItem",
+            name: "item-details",
+            component: () => import("./components/Item")
+        },
     ]
 });

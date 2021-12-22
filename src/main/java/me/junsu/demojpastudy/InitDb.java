@@ -29,10 +29,14 @@ public class InitDb {
             Book item2 = new Book("Summer Book", 100,20000, "lee");
             Book item3 = new Book("Fall Book", 50, 25000, "lee");
             Book item4 = new Book("Winter Book", 50, 30000, "lee");
+            Book item5 = new Book("Spring Data JPA", 11, 35000, "lee");
+            Book item6 = new Book("SpringFramework 5.0", 29, 30000, "lee");
             em.persist(item1);
             em.persist(item2);
             em.persist(item3);
             em.persist(item4);
+            em.persist(item5);
+            em.persist(item6);
 
             Address address1 = new Address("서울특별시", "마포구 마포대로", "04413");
             Address address2 = new Address("부산광역시", "금정구", "01111");

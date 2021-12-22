@@ -1,25 +1,22 @@
 <template>
-  <div class="list row">
-    <div class="col-md-6">
-      <h4>상품 목록</h4>
-      <ul class="list-group">
-        <li class="list-group-item" :class="{active: index == currentIndex}"
-        v-for="(item, index) in items" :key="item.itemId"
-        @click="setActiveItem(item, index)">
-          {{ item.itemName }}
-        </li>
-      </ul>
-    </div>
-    <div class="col-md-6">
-      <div v-if="currentItem">
-        <div>
-          <label><strong>상품명 : </strong></label>{{ currentItem.itemName }}<br>
-          <label><strong>재고량 : </strong></label>{{ currentItem.stockQuantity }}<br>
-          <label><strong>가격 : </strong></label>{{ currentItem.itemPrice }}
-        </div>
-      </div>
-    </div>
-  </div>
+  <v-row align="center" class="list px-3 mx-auto">
+    <v-col cols="12" sm="12">
+      <v-card>
+        <v-card-title>Items</v-card-title>
+        <v-data-table
+            :headers="headers"
+            :items="items"
+            disable-pagination
+            :hide-default-footer="true"
+        >
+          <template v-slot:[`item.actions`]="{ item }">
+            <v-icon small class="mx-2" @click="updateItem(item.id)">mdi-pencil</v-icon>
+            <v-icon small @click="deleteItem(item.id)">mdi-delete</v-icon>
+          </template>
+        </v-data-table>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 <script>
 import ItemDataService from "@/services/ItemDataService";
@@ -30,7 +27,13 @@ export default {
     return {
       items: [],
       currentItem: null,
-      currentIndex: -1
+      currentIndex: -1,
+      headers: [
+        { text: "Name", align: "start", sortable: false, value: "itemName" },
+        { text: "StockQuantity", value: "stockQuantity", sortable: false },
+        { text: "Price", value: "itemPrice", sortable: false },
+        { text: "Actions", value: "actions", sortable: false }
+      ]
     };
   },
   methods: {
@@ -43,10 +46,24 @@ export default {
         console.log(e);
       })
     },
-
+    refreshList() {
+      this.findAllItems();
+    },
     setActiveItem(item, index) {
       this.currentItem = item;
       this.currentIndex = index;
+    },
+    deleteItem(id) {
+      ItemDataService.deleteItem(id)
+      .then(() => {
+        this.refreshList();
+      })
+      .catch(e => {
+        console.log(e);
+      })
+    },
+    updateItem(id) {
+      this.$router.push({name:"item-details", params: { id: id }})
     }
   },
   mounted() {

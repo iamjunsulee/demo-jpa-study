@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import me.junsu.demojpastudy.domain.Book;
 import me.junsu.demojpastudy.domain.Item;
 import me.junsu.demojpastudy.service.ItemService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,11 +17,11 @@ public class ItemApiController {
     private final ItemService itemService;
 
     @PostMapping("/api/addBook")
-    public CreateItemResponse registerItem(@RequestBody CreateItemRequest itemRequest) {
+    public ItemResponse registerItem(@RequestBody ItemRequest itemRequest) {
         //상품 카테고리가 필요해보임. 상품 타입이 뭔줄 알아야 해당 객체를 생성할 수 있지 않을까..?
         Book book = new Book(itemRequest.getItemName(), itemRequest.getStockQuantity(), itemRequest.getItemPrice(), itemRequest.getAuthor());
         Long saveItemId = itemService.saveItem(book);
-        return new CreateItemResponse(saveItemId);
+        return new ItemResponse(saveItemId);
     }
 
     @GetMapping("/api/books")
@@ -36,6 +33,30 @@ public class ItemApiController {
         return new Result<>(itemDtos);
     }
 
+    @GetMapping("/api/items/{id}")
+    public Result<ItemDto> getItemById(@PathVariable Long id) {
+        Item item = itemService.findById(id);
+        ItemDto itemDto = new ItemDto(item.getId(), item.getName(), item.getPrice(), item.getStockQuantity());
+        return new Result<>(itemDto);
+    }
+
+    @DeleteMapping("/api/items/{id}")
+    public void deleteItem(@PathVariable Long id) {
+        itemService.deleteById(id);
+    }
+
+    @PutMapping("/api/items/{id}")
+    public ItemResponse updateItem(@PathVariable Long id, @RequestBody ItemRequest itemRequest) {
+        Item item = itemService.findById(id);
+        item.setName(itemRequest.getItemName());
+        item.setStockQuantity(itemRequest.getStockQuantity());
+        item.setPrice(itemRequest.getItemPrice());
+
+        Long saveItemId = itemService.saveItem(item);
+
+        return new ItemResponse(saveItemId);
+    }
+
     @Data
     @AllArgsConstructor
     static class Result<T> {
@@ -45,7 +66,7 @@ public class ItemApiController {
     @Data
     @AllArgsConstructor
     static class ItemDto {
-        private Long itemId;
+        private Long id;
         private String itemName;
         private int itemPrice;
         private int stockQuantity;
@@ -54,11 +75,11 @@ public class ItemApiController {
 
     @Data
     @AllArgsConstructor
-    static class CreateItemResponse {
+    static class ItemResponse {
         private Long id;
     }
     @Data
-    static class CreateItemRequest {
+    static class ItemRequest {
         private String itemName;
         private int itemPrice;
         private int stockQuantity;
