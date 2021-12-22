@@ -22,13 +22,11 @@
           :rules="[(v) => !!v || '우편번호는 필수입니다.']"
           label="우편번호"
           required></v-text-field>
-
-      <v-btn color="error" small class="mr-2" @click="deleteMember">
-        Delete
+      <v-btn small color="primary" class="mr-2" @click="updateMember">
+        수정
       </v-btn>
-
-      <v-btn small color="primary" @click="updateMember">
-        Edit
+      <v-btn color="error" small @click="deleteMember">
+        삭제
       </v-btn>
     </v-form>
   </div>

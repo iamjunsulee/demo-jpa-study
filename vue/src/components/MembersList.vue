@@ -43,7 +43,7 @@ export default {
         { text: "City", value: "address.city", sortable: false },
         { text: "Street", value: "address.street", sortable: false },
         { text: "Zipcode", value: "address.zipcode", sortable: false },
-        { text: "Actions", value: "actions", sortable: false },
+        { text: "Actions", value: "actions", sortable: false }
       ]
     };
   },

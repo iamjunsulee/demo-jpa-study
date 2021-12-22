@@ -1,28 +1,40 @@
 <template>
-  <div class = "submit-form">
+  <div class = "submit-form mt-3 mx-auto">
+    <p class="headline">회원등록</p>
     <div v-if="!submitted">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" required v-model="member.name" name="name"/>
-      </div>
-      <div class="form-group">
-        <label for="city">City</label>
-        <input type="text" class="form-control" id="city" required v-model="member.city" name="city"/>
-      </div>
-      <div class="form-group">
-        <label for="street">Street</label>
-        <input type="text" class="form-control" id="street" required v-model="member.street" name="street"/>
-      </div>
-      <div class="form-group">
-        <label for="zipcode">Zipcode</label>
-        <input type="text" class="form-control" id="zipcode" required v-model="member.zipcode" name="zipcode"/>
-      </div>
-
-      <button class="btn btn-success" @click="saveMember">Submit</button>
+      <v-form ref="form" lazy-validation>
+        <v-text-field
+          v-model="member.name"
+          :rules="[(v) => !!v || '이름은 필수입니다.']"
+          label="이름"
+          required
+          ></v-text-field>
+        <v-text-field
+            v-model="member.address.city"
+            :rules="[(v) => !!v || '도시명은 필수입니다.']"
+            label="도시명"
+            required></v-text-field>
+        <v-text-field
+            v-model="member.address.street"
+            :rules="[(v) => !!v || '거리명은 필수입니다.']"
+            label="거리명"
+            required></v-text-field>
+        <v-text-field
+            v-model="member.address.zipcode"
+            :rules="[(v) => !!v || '우편번호는 필수입니다.']"
+            label="우편번호"
+            required></v-text-field>
+      </v-form>
+      <v-btn color="success" class="mt-3" @click="saveMember">등록</v-btn>
     </div>
     <div v-else>
-      <h4>You submitted successfully!</h4>
-      <button class="btn btn-success" @click="newMember">Add</button>
+      <v-card class="mx-auto">
+        <v-card-title>회원가입에 성공했습니다.</v-card-title>
+        <v-card-subtitle>Click the button to add new member !</v-card-subtitle>
+        <v-card-actions>
+          <v-btn color="primary" @click="newMember">추가</v-btn>
+        </v-card-actions>
+      </v-card>
     </div>
   </div>
 </template>
@@ -35,23 +47,20 @@ export default {
   data() {
     return {
       member: {
-        id: null
+        id: null,
+        name: "",
+        address: {
+          city: "",
+          street: "",
+          zipcode: ""
+        }
       },
       submitted: false
     };
   },
   methods: {
     saveMember() {
-      let data = {
-        name: this.member.name,
-        address: {
-          city: this.member.city,
-          street: this.member.street,
-          zipcode: this.member.zipcode
-        }
-      };
-
-      MemberDataService.join(data)
+      MemberDataService.join(this.member)
       .then(response => {
         this.member.id = response.data.id;
         console.log(response.data);
@@ -63,6 +72,7 @@ export default {
     },
     newMember() {
       this.member = {};
+      this.member.address = {};
       this.submitted = false;
     }
   }
