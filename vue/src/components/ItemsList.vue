@@ -6,6 +6,7 @@
         <v-data-table
             :headers="headers"
             :items="items"
+            :loading="loading"
             disable-pagination
             :hide-default-footer="true"
         >
@@ -33,25 +34,26 @@ export default {
         { text: "StockQuantity", value: "stockQuantity", sortable: false },
         { text: "Price", value: "itemPrice", sortable: false },
         { text: "Actions", value: "actions", sortable: false }
-      ]
+      ],
+      loading: false
     };
   },
   methods: {
     findAllItems() {
+      if(this.loading) return;
+      this.loading = true;
       ItemDataService.findAllItems()
       .then(response => {
         this.items = response.data.data;
+        this.loading = false;
       })
       .catch(e => {
         console.log(e);
+        this.loading = false;
       })
     },
     refreshList() {
       this.findAllItems();
-    },
-    setActiveItem(item, index) {
-      this.currentItem = item;
-      this.currentIndex = index;
     },
     deleteItem(id) {
       ItemDataService.deleteItem(id)

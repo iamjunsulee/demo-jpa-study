@@ -1,28 +1,43 @@
 <template>
-  <div class = "submit-form">
+  <div class = "submit-form mt-3 mx-auto">
+    <p class="headline">상품등록</p>
     <div v-if="!submitted">
-      <div class="form-group">
-        <label for="name">상품명</label>
-        <input type="text" class="form-control" id="name" required v-model="book.name" name="name"/>
-      </div>
-      <div class="form-group">
-        <label for="stockQuantity">재고량</label>
-        <input type="text" class="form-control" id="stockQuantity" required v-model="book.stockQuantity" name="stockQuantity"/>
-      </div>
-      <div class="form-group">
-        <label for="price">가격</label>
-        <input type="text" class="form-control" id="price" required v-model="book.price" name="price"/>
-      </div>
-      <div class="form-group">
-        <label for="author">작가</label>
-        <input type="text" class="form-control" id="author" required v-model="book.author" name="author"/>
-      </div>
-
-      <button class="btn btn-success" @click="saveBook">Submit</button>
+      <v-form ref="form" lazy-validation>
+        <v-text-field
+          v-model="book.itemName"
+          :rules="[v => !!v || '상품명은 필수입니다.']"
+          label="상품명"
+          required
+          ></v-text-field>
+        <v-text-field
+            v-model="book.stockQuantity"
+            :rules="[v => !!v || '재고량은 필수입니다.']"
+            label="재고량"
+            required
+        ></v-text-field>
+        <v-text-field
+            v-model="book.itemPrice"
+            :rules="[v => !!v || '상품가격은 필수입니다.']"
+            label="상품가격"
+            required
+        ></v-text-field>
+        <v-text-field
+            v-model="book.author"
+            :rules="[v => !!v || '작가는 필수입니다.']"
+            label="작가"
+            required
+        ></v-text-field>
+      </v-form>
+      <v-btn color="success" class="mt-3" @click="saveBook">등록</v-btn>
     </div>
     <div v-else>
-      <h4>You submitted successfully!</h4>
-      <button class="btn btn-success" @click="newBook">Add</button>
+      <v-card class="mx-auto">
+        <v-card-title>상품등록에 성공했습니다.</v-card-title>
+        <v-card-subtitle>추가로 상품을 등록하고 싶다면 클릭하세요 !</v-card-subtitle>
+        <v-card-actions>
+          <v-btn color="primary" @click="newBook">추가</v-btn>
+        </v-card-actions>
+      </v-card>
     </div>
   </div>
 </template>
@@ -34,21 +49,18 @@ export default {
   data() {
     return {
       book: {
-        id: null
+        id: null,
+        itemName: "",
+        itemPrice: 0,
+        stockQuantity: 0,
+        author: ""
       },
       submitted: false
     }
   },
   methods: {
     saveBook() {
-      let data = {
-        itemName: this.book.name,
-        stockQuantity: this.book.stockQuantity,
-        itemPrice: this.book.price,
-        author: this.book.author
-      }
-
-      ItemDataService.addBook(data)
+      ItemDataService.addBook(this.book)
       .then(response => {
         this.book.id = response.data.id;
         this.submitted = true;
