@@ -10,7 +10,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity{
     @Id @GeneratedValue
@@ -32,4 +31,10 @@ public class Member extends BaseEntity{
     //연관관계의 주인이 아님을 명시
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
+
+    //변경 메소드
+    public void updateMemberInfo(String name, Address address) {
+        this.name = name;
+        this.address = address;
+    }
 }

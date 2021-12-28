@@ -9,6 +9,7 @@ import me.junsu.demojpastudy.service.MemberService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,12 +80,11 @@ public class MemberApiController {
     }
 
     @PutMapping("/api/members/{id}")
+    @Transactional
     public MemberResponse updateMember(@PathVariable Long id, @RequestBody MemberRequest request) {
         Member member = memberService.findById(id);
-        member.setAddress(request.getAddress());
-        member.setName(request.getName());
-        Long updateId = memberService.save(member);
-        return new MemberResponse(updateId);
+        member.updateMemberInfo(request.getName(), request.getAddress());
+        return new MemberResponse(id);
     }
 
     @Data

@@ -17,13 +17,11 @@
           :rules="[(v) => !!v || '상품가격은 필수입니다.']"
           label="상품가격"
           required></v-text-field>
-
-      <v-btn color="error" small class="mr-2" @click="deleteItem">
-        Delete
+      <v-btn small class="mr-2" color="primary" @click="updateItem">
+        수정
       </v-btn>
-
-      <v-btn small color="primary" @click="updateItem">
-        Edit
+      <v-btn color="error" small @click="deleteItem">
+        삭제
       </v-btn>
     </v-form>
   </div>

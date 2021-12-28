@@ -8,6 +8,7 @@ import me.junsu.demojpastudy.domain.Item;
 import me.junsu.demojpastudy.service.ItemService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,15 +47,11 @@ public class ItemApiController {
     }
 
     @PutMapping("/api/items/{id}")
+    @Transactional
     public ItemResponse updateItem(@PathVariable Long id, @RequestBody ItemRequest itemRequest) {
         Item item = itemService.findById(id);
-        item.setName(itemRequest.getItemName());
-        item.setStockQuantity(itemRequest.getStockQuantity());
-        item.setPrice(itemRequest.getItemPrice());
-
-        Long saveItemId = itemService.saveItem(item);
-
-        return new ItemResponse(saveItemId);
+        item.updateItemInfo(itemRequest.getItemName(), itemRequest.getStockQuantity(), itemRequest.getItemPrice());
+        return new ItemResponse(id);
     }
 
     @Data

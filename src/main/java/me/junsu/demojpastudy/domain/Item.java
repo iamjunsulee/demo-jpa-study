@@ -29,4 +29,11 @@ public abstract class Item {
         }
         this.stockQuantity = rest;
     }
+
+    //변경메소드
+    public void updateItemInfo(String name, int stockQuantity, int price) {
+        this.name = name;
+        this.stockQuantity = stockQuantity;
+        this.price = price;
+    }
 }
