@@ -7,8 +7,6 @@ import me.junsu.demojpastudy.domain.Book;
 import me.junsu.demojpastudy.domain.Item;
 import me.junsu.demojpastudy.service.ItemService;
 import org.springframework.web.bind.annotation.*;
-
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,10 +45,8 @@ public class ItemApiController {
     }
 
     @PutMapping("/api/items/{id}")
-    @Transactional
     public ItemResponse updateItem(@PathVariable Long id, @RequestBody ItemRequest itemRequest) {
-        Item item = itemService.findById(id);
-        item.updateItemInfo(itemRequest.getItemName(), itemRequest.getStockQuantity(), itemRequest.getItemPrice());
+        itemService.updateItem(id, itemRequest);
         return new ItemResponse(id);
     }
 
@@ -76,7 +72,7 @@ public class ItemApiController {
         private Long id;
     }
     @Data
-    static class ItemRequest {
+    public static class ItemRequest {
         private String itemName;
         private int itemPrice;
         private int stockQuantity;

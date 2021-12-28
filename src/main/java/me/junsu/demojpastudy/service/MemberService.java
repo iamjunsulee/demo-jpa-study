@@ -5,8 +5,8 @@ import me.junsu.demojpastudy.api.MemberApiController;
 import me.junsu.demojpastudy.domain.Member;
 import me.junsu.demojpastudy.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;

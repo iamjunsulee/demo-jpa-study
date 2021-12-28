@@ -1,6 +1,7 @@
 package me.junsu.demojpastudy.service;
 
 import lombok.RequiredArgsConstructor;
+import me.junsu.demojpastudy.api.ItemApiController;
 import me.junsu.demojpastudy.domain.Item;
 import me.junsu.demojpastudy.repository.ItemRepository;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,11 @@ public class ItemService {
 
     public Item findById(Long id) {
         return itemRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    }
+
+    @Transactional
+    public void updateItem(Long id, ItemApiController.ItemRequest itemRequest) {
+        Item item = this.findById(id);
+        item.updateItemInfo(itemRequest.getItemName(), itemRequest.getStockQuantity(), itemRequest.getItemPrice());
     }
 }
