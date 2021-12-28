@@ -80,10 +80,8 @@ public class MemberApiController {
     }
 
     @PutMapping("/api/members/{id}")
-    @Transactional
     public MemberResponse updateMember(@PathVariable Long id, @RequestBody MemberRequest request) {
-        Member member = memberService.findById(id);
-        member.updateMemberInfo(request.getName(), request.getAddress());
+        memberService.updateMember(id, request);
         return new MemberResponse(id);
     }
 
@@ -109,7 +107,7 @@ public class MemberApiController {
     }
 
     @Data
-    static class MemberRequest {
+    public static class MemberRequest {
         private String name;
         private Address address;
     }

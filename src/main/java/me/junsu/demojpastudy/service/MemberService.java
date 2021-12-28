@@ -1,10 +1,12 @@
 package me.junsu.demojpastudy.service;
 
 import lombok.RequiredArgsConstructor;
+import me.junsu.demojpastudy.api.MemberApiController;
 import me.junsu.demojpastudy.domain.Member;
 import me.junsu.demojpastudy.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -32,4 +34,10 @@ public class MemberService {
     }
 
     public void deleteById(Long id) { memberRepository.deleteById(id);}
+
+    @Transactional
+    public void updateMember(Long id, MemberApiController.MemberRequest request) {
+        Member member = this.findById(id);
+        member.updateMemberInfo(request.getName(), request.getAddress());
+    }
 }
