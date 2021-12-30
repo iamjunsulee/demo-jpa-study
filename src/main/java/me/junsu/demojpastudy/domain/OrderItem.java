@@ -26,11 +26,12 @@ public class OrderItem {
     private Order order;        //주문
 
     /* 생성메서드 */
-    public static OrderItem createOrderItem(Item item, int price, int orderQuantity) {
+    public static OrderItem createOrderItem(Item item, int price, int orderQuantity) throws Exception {
         OrderItem orderItem = new OrderItem();
         orderItem.setItem(item);
         orderItem.setOrderPrice(price);
         orderItem.setOrderQuantity(orderQuantity);
+        item.removeStock(orderQuantity);
         return orderItem;
     }
 

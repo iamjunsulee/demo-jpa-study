@@ -1,5 +1,7 @@
 package me.junsu.demojpastudy.api;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.junsu.demojpastudy.domain.Address;
@@ -10,6 +12,8 @@ import me.junsu.demojpastudy.repository.SimpleOrderDto;
 import me.junsu.demojpastudy.repository.order.query.OrderQueryDto;
 import me.junsu.demojpastudy.service.OrderService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -97,6 +101,12 @@ public class OrderApiController {
         return orderService.findOrderQueryDto2();
     }
 
+    @PostMapping("/api/orders")
+    public CreateOrderResponse createOrder(@RequestBody CreateOrderRequest request) throws Exception {
+        Long saveOrderId = orderService.createOrder(request);
+        return new CreateOrderResponse(saveOrderId);
+    }
+
     @Getter
     static class OrderDto {
 
@@ -129,5 +139,18 @@ public class OrderApiController {
             orderPrice = orderItem.getOrderPrice();
             orderQuantity = orderItem.getOrderQuantity();
         }
+    }
+
+    @Data
+    public static class CreateOrderRequest {
+        private Long itemId;
+        private int orderPrice;
+        private int orderQuantity;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class CreateOrderResponse {
+        private Long id;
     }
 }

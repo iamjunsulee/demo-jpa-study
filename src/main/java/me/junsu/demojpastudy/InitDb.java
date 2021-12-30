@@ -14,7 +14,7 @@ public class InitDb {
     private final InitService initService;
 
     @PostConstruct
-    public void init() {
+    public void init() throws Exception {
         initService.initDb();
     }
 
@@ -24,7 +24,7 @@ public class InitDb {
     static class InitService {
         private final EntityManager em;
 
-        public void initDb() {
+        public void initDb() throws Exception {
             Book item1 = new Book("Spring Book", 100, 10000, "lee");
             Book item2 = new Book("Summer Book", 100,20000, "lee");
             Book item3 = new Book("Fall Book", 50, 25000, "lee");
@@ -63,16 +63,10 @@ public class InitDb {
             OrderItem orderItem2 = OrderItem.createOrderItem(item2, 20000,2);
             OrderItem orderItem3 = OrderItem.createOrderItem(item3, 25000,3);
             OrderItem orderItem4 = OrderItem.createOrderItem(item4, 30000,4);
-            em.persist(orderItem1);
-            em.persist(orderItem2);
-            em.persist(orderItem3);
-            em.persist(orderItem4);
 
             //배송생성
             Delivery delivery = new Delivery(address1);
             Delivery delivery2 = new Delivery(address2);
-            em.persist(delivery);
-            em.persist(delivery2);
 
             //주문생성
             Order order = Order.createOrder(member, delivery, orderItem4, orderItem2);

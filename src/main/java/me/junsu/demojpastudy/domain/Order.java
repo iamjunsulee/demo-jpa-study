@@ -31,11 +31,11 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member;              //주문회원
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     //@BatchSize(size = 10)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;          //배송
 

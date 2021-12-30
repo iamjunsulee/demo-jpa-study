@@ -1,7 +1,10 @@
 package me.junsu.demojpastudy.service;
 
 import lombok.RequiredArgsConstructor;
-import me.junsu.demojpastudy.domain.Order;
+import me.junsu.demojpastudy.api.OrderApiController;
+import me.junsu.demojpastudy.domain.*;
+import me.junsu.demojpastudy.repository.ItemRepository;
+import me.junsu.demojpastudy.repository.MemberRepository;
 import me.junsu.demojpastudy.repository.order.query.OrderItemQueryDto;
 import me.junsu.demojpastudy.repository.order.query.OrderQueryDto;
 import me.junsu.demojpastudy.repository.order.query.OrderQueryRepository;
@@ -19,6 +22,8 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderQueryRepository orderQueryRepository;
+    private final ItemRepository itemRepository;
+    private final MemberRepository memberRepository;
 
     public List<Order> findAll() {
         return orderRepository.findAll();
@@ -66,5 +71,15 @@ public class OrderService {
     public void cancelOrder(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(NoSuchElementException::new);
         order.cancel();
+    }
+
+    //TO_DO : 로그인을 통해 사용자 정보를 받아오도록 해야함. 배송정보 입력받아서 받아오도록 해야함.
+    public Long createOrder(OrderApiController.CreateOrderRequest request) throws Exception {
+        Item item = itemRepository.findById(request.getItemId()).orElseThrow(NoSuchElementException::new);
+        OrderItem orderItem = OrderItem.createOrderItem(item, request.getOrderPrice(), request.getOrderQuantity());
+        Member member = memberRepository.findById(7L).orElseThrow(NoSuchElementException::new);
+        Order order = Order.createOrder(member, null, orderItem);
+        //cascade = CascadeType.ALL 옵션으로 인해 연관덴 엔티티 모두 persist 해준다.
+        return orderRepository.save(order).getId();
     }
 }
