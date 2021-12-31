@@ -51,13 +51,16 @@ export default {
           })
     },
     updateItem() {
-      ItemDataService.updateItem(this.currentItem.id, this.currentItem)
-          .then(() => {
-            this.$router.push({name: "items"});
-          })
-          .catch(e => {
-            console.log(e);
-          })
+      const validate = this.$refs.form.validate();
+      if (validate) {
+        ItemDataService.updateItem(this.currentItem.id, this.currentItem)
+            .then(() => {
+              this.$router.push({name: "items"});
+            })
+            .catch(e => {
+              console.log(e);
+            })
+      }
     },
     deleteItem() {
       ItemDataService.deleteItem(this.currentMember.id)

@@ -57,13 +57,16 @@ export default {
       })
     },
     updateMember() {
-      MemberDataService.updateMember(this.currentMember.id, this.currentMember)
-          .then(() => {
-            this.$router.push({name: "members"});
-          })
-          .catch(e => {
-            console.log(e);
-          })
+      const validate = this.$refs.form.validate();
+      if (validate) {
+        MemberDataService.updateMember(this.currentMember.id, this.currentMember)
+            .then(() => {
+              this.$router.push({name: "members"});
+            })
+            .catch(e => {
+              console.log(e);
+            })
+      }
     },
     deleteMember() {
       MemberDataService.deleteMember(this.currentMember.id)

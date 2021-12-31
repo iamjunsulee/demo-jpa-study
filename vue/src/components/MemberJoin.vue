@@ -60,15 +60,18 @@ export default {
   },
   methods: {
     saveMember() {
-      MemberDataService.join(this.member)
-      .then(response => {
-        this.member.id = response.data.id;
-        console.log(response.data);
-        this.submitted = true;
-      })
-      .catch(e => {
-        console.log(e);
-      })
+      const validate = this.$refs.form.validate();
+      if (validate) {
+        MemberDataService.join(this.member)
+            .then(response => {
+              this.member.id = response.data.id;
+              console.log(response.data);
+              this.submitted = true;
+            })
+            .catch(e => {
+              console.log(e);
+            })
+      }
     },
     newMember() {
       this.member = {};

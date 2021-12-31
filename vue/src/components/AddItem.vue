@@ -60,14 +60,17 @@ export default {
   },
   methods: {
     saveBook() {
-      ItemDataService.addBook(this.book)
-      .then(response => {
-        this.book.id = response.data.id;
-        this.submitted = true;
-      })
-      .catch(e => {
-        console.log(e);
-      })
+      const validate = this.$refs.form.validate();
+      if (validate) {
+        ItemDataService.addBook(this.book)
+            .then(response => {
+              this.book.id = response.data.id;
+              this.submitted = true;
+            })
+            .catch(e => {
+              console.log(e);
+            })
+      }
     },
     newBook() {
       this.book = {};
