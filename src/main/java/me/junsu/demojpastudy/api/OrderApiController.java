@@ -147,6 +147,7 @@ public class OrderApiController {
         private Long itemId;
         private int orderPrice;
         private int orderQuantity;
+        private Address address;
     }
 
     @Data

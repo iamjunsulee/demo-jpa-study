@@ -78,7 +78,8 @@ public class OrderService {
         Item item = itemRepository.findById(request.getItemId()).orElseThrow(NoSuchElementException::new);
         OrderItem orderItem = OrderItem.createOrderItem(item, request.getOrderPrice(), request.getOrderQuantity());
         Member member = memberRepository.findById(request.getMemberId()).orElseThrow(NoSuchElementException::new);
-        Order order = Order.createOrder(member, null, orderItem);
+        Delivery delivery = new Delivery(request.getAddress());
+        Order order = Order.createOrder(member, delivery, orderItem);
         //cascade = CascadeType.ALL 옵션으로 인해 연관덴 엔티티 모두 persist 해준다.
         return orderRepository.save(order).getId();
     }

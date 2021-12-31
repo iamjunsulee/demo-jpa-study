@@ -13,6 +13,25 @@
           @change="setMemberInfo"
       >
       </v-combobox>
+      <p>배송지</p>
+      <v-text-field
+          v-model="orderRequest.address.city"
+          :rules="[v => !!v || '주소는 필수입니다.']"
+          label="주소1"
+          required
+      ></v-text-field>
+      <v-text-field
+          v-model="orderRequest.address.street"
+          :rules="[v => !!v || '주소는 필수입니다.']"
+          label="주소2"
+          required
+      ></v-text-field>
+      <v-text-field
+          v-model="orderRequest.address.zipcode"
+          :rules="[v => !!v || '우편번호은 필수입니다.']"
+          label="우편번호"
+          required
+      ></v-text-field>
       <v-combobox
           dense
           solo
@@ -74,7 +93,12 @@ export default {
         memberId: "",
         itemId: "",
         orderQuantity: 0,
-        orderPrice: 0
+        orderPrice: 0,
+        address: {
+          city: "",
+          street: "",
+          zipcode: ""
+        }
       },
       order: {
         id: null
@@ -109,6 +133,9 @@ export default {
     },
     setMemberInfo() {
       this.orderRequest.memberId = this.selectedMember.id;
+      this.orderRequest.address.city = this.selectedMember.address.city;
+      this.orderRequest.address.street = this.selectedMember.address.street;
+      this.orderRequest.address.zipcode = this.selectedMember.address.zipcode;
     },
     increment() {
       this.orderRequest.orderQuantity = parseInt(this.orderRequest.orderQuantity, 10) + 1;
