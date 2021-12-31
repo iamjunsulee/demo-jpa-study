@@ -77,7 +77,7 @@ public class OrderService {
     public Long createOrder(OrderApiController.CreateOrderRequest request) throws Exception {
         Item item = itemRepository.findById(request.getItemId()).orElseThrow(NoSuchElementException::new);
         OrderItem orderItem = OrderItem.createOrderItem(item, request.getOrderPrice(), request.getOrderQuantity());
-        Member member = memberRepository.findById(7L).orElseThrow(NoSuchElementException::new);
+        Member member = memberRepository.findById(request.getMemberId()).orElseThrow(NoSuchElementException::new);
         Order order = Order.createOrder(member, null, orderItem);
         //cascade = CascadeType.ALL 옵션으로 인해 연관덴 엔티티 모두 persist 해준다.
         return orderRepository.save(order).getId();

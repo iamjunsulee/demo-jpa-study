@@ -5,16 +5,27 @@
       <v-combobox
           dense
           solo
+          :items="members"
+          item-text="name"
+          item-value="id"
+          label="회원을 선택하세요"
+          v-model="selectedMember"
+          @change="setMemberInfo"
+      >
+      </v-combobox>
+      <v-combobox
+          dense
+          solo
           :items="items"
           item-text="itemName"
           item-value="id"
           label="상품을 선택하세요"
-          v-model="selected"
-          @change="setOrderPrice"
+          v-model="selectedItem"
+          @change="setItemInfo"
       >
       </v-combobox>
       <v-text-field
-        v-model.number="orderItem.orderQuantity"
+        v-model.number="orderRequest.orderQuantity"
         :rules="[v => !!v || '주문수량은 필수입니다.', v => (v > 0) || '주문수량은 0보다 커야합니다.']"
         label="주문수량"
         required
@@ -35,7 +46,7 @@
         </v-icon>
       </v-text-field>
       <v-text-field
-          v-model="orderItem.orderPrice"
+          v-model="orderRequest.orderPrice"
           :rules="[v => !!v || '주문가격은 필수입니다.']"
           label="주문가격"
           required
@@ -48,15 +59,19 @@
 
 <script>
 import ItemDataService from "@/services/ItemDataService";
+import MemberDataService from "@/services/MemberDataService";
 import OrderDataService from "@/services/OrderDataService";
 
 export default {
   name: "order",
   data() {
     return {
-      selected: null,
+      selectedItem: null,
+      selectedMember: null,
       items: [],
-      orderItem: {
+      members: [],
+      orderRequest: {
+        memberId: "",
         itemId: "",
         orderQuantity: 0,
         orderPrice: 0
@@ -77,30 +92,47 @@ export default {
         console.log(e);
       })
     },
-    setOrderPrice() {
-      this.orderItem.orderPrice = this.selected.itemPrice;
-      this.orderItem.itemId = this.selected.id;
-      this.orderItem.orderQuantity = 0;
-    },
-    increment() {
-      this.orderItem.orderQuantity = parseInt(this.orderItem.orderQuantity, 10) + 1;
-    },
-    decrement() {
-      this.orderItem.orderQuantity = parseInt(this.orderItem.orderQuantity, 10) - 1;
-    },
-    createOrder() {
-      OrderDataService.createOrder(this.orderItem)
+    getAllMembers() {
+      MemberDataService.getAll()
       .then(response => {
-        this.order.id = response.data.id;
-        console.log(response.data);
+        this.members = response.data.data;
+        console.log(response.data.data);
       })
       .catch(e => {
         console.log(e);
       })
+    },
+    setItemInfo() {
+      this.orderRequest.orderPrice = this.selectedItem.itemPrice;
+      this.orderRequest.itemId = this.selectedItem.id;
+      this.orderRequest.orderQuantity = 0;
+    },
+    setMemberInfo() {
+      this.orderRequest.memberId = this.selectedMember.id;
+    },
+    increment() {
+      this.orderRequest.orderQuantity = parseInt(this.orderRequest.orderQuantity, 10) + 1;
+    },
+    decrement() {
+      this.orderRequest.orderQuantity = parseInt(this.orderRequest.orderQuantity, 10) - 1;
+    },
+    createOrder() {
+      const validate = this.$refs.form.validate();
+      if (validate) {
+        OrderDataService.createOrder(this.orderRequest)
+            .then(response => {
+              this.order.id = response.data.id;
+              console.log(response.data);
+            })
+            .catch(e => {
+              console.log(e);
+            })
+      }
     }
   },
   mounted() {
     this.getAllItems();
+    this.getAllMembers();
   }
 }
 </script>

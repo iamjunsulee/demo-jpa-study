@@ -143,6 +143,7 @@ public class OrderApiController {
 
     @Data
     public static class CreateOrderRequest {
+        private Long memberId;
         private Long itemId;
         private int orderPrice;
         private int orderQuantity;
