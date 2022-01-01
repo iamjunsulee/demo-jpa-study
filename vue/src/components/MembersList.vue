@@ -61,15 +61,10 @@ export default {
     refreshList() {
       this.retrieveMembers();
     },
-    setActiveMember(member, index) {
-      this.currentMember = member;
-      this.currentIndex = index;
-    },
     searchByName() {
       MemberDataService.findByName(this.searchName)
           .then(response => {
             this.members = response.data.data;
-            this.setActiveMember(null, -1);
             console.log(response.data.data);
           })
           .catch(e => {
