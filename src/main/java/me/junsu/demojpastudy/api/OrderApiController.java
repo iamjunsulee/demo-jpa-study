@@ -107,9 +107,8 @@ public class OrderApiController {
         return new CreateOrderResponse(saveOrderId);
     }
 
-    @Getter
+    @Data
     static class OrderDto {
-
         private Long orderId;
         private String name;
         private OrderStatus orderStatus;
@@ -128,7 +127,7 @@ public class OrderApiController {
         }
     }
 
-    @Getter
+    @Data
     static class OrderItemDto {
         private String itemName;
         private int orderPrice;

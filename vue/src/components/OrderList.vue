@@ -1,0 +1,59 @@
+<template>
+  <v-row align="center" class="list px-3 mx-auto">
+    <v-col cols="12" sm="12">
+      <v-card>
+        <v-card-title>Orders</v-card-title>
+        <v-data-table
+          :headers="headers"
+          :items="orders"
+          disable-pagination
+          :hide-default-footer="true"
+          ></v-data-table>
+      </v-card>
+    </v-col>
+  </v-row>
+</template>
+<script>
+import OrderDataService from "@/services/OrderDataService";
+
+export default {
+  name: "order_list",
+  data() {
+    return {
+      orders: [],
+      headers: [
+        { text: "주문자명", align: "start", sortable: false, value: "name" },
+        { text: "배송주소1", value: "address.city", sortable: false },
+        { text: "배송주소2", value: "address.street", sortable: false },
+        { text: "우편번호", align: "center", value: "address.zipcode", sortable: false },
+        { text: "상품명", value: "orderItems[0].itemName", sortable: false },
+        { text: "주문수량", align: "center", value: "orderItems[0].orderQuantity", sortable: false },
+        { text: "주문일자", value: "orderDate", sortable: false },
+        { text: "주문상태", align: "center", value: "orderStatus", sortable: false }
+      ]
+    }
+  },
+  methods: {
+    getAllOrders() {
+      OrderDataService.getAllOrders()
+      .then(response => {
+        this.orders = response.data;
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      })
+    }
+  },
+  mounted() {
+    this.getAllOrders();
+  }
+}
+</script>
+<style>
+.list {
+  text-align: left;
+  max-width: 950px;
+  margin: auto;
+}
+</style>
