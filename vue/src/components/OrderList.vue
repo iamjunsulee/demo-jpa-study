@@ -16,8 +16,8 @@
               {{ item.orderStatus }}
             </v-chip>
           </template>
-          <template v-slot:item.actions="{ item }">
-            <v-icon color="red" small @click="cancelOrder(item.orderId)">mdi-minus-circle</v-icon>
+          <template v-slot:item.cancel="{ item }">
+            <v-icon v-if="item.orderStatus === 'ORDERED'" color="red" small @click="cancelOrder(item.orderId)">mdi-close-outline</v-icon>
           </template>
         </v-data-table>
       </v-card>
@@ -41,7 +41,7 @@ export default {
         { text: "주문수량", align: "center", value: "orderItems[0].orderQuantity", sortable: false },
         { text: "주문일자", value: "orderDate", sortable: false },
         { text: "주문상태", align: "center", value: "orderStatus", sortable: false },
-        { text: "Actions", align: "center", value: "actions", sortable: false}
+        { text: "주문취소", align: "center", value: "cancel", sortable: false}
       ]
     }
   },
@@ -81,7 +81,7 @@ export default {
 <style>
 .order_list {
   text-align: left;
-  max-width: 1050px;
+  max-width: 1150px;
   margin: auto;
 }
 </style>
