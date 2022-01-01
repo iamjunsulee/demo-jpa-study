@@ -1,5 +1,5 @@
 <template>
-  <v-row align="center" class="list px-3 mx-auto">
+  <v-row align="center" class="order_list px-3 mx-auto">
     <v-col cols="12" sm="12">
       <v-card>
         <v-card-title>Orders</v-card-title>
@@ -8,7 +8,18 @@
           :items="orders"
           disable-pagination
           :hide-default-footer="true"
-          ></v-data-table>
+          >
+          <template v-slot:item.orderStatus="{ item }">
+            <v-chip
+                :color="getColor(item.orderStatus)"
+            >
+              {{ item.orderStatus }}
+            </v-chip>
+          </template>
+          <template v-slot:item.actions="{ item }">
+            <v-icon color="red" small @click="cancelOrder(item.orderId)">mdi-minus-circle</v-icon>
+          </template>
+        </v-data-table>
       </v-card>
     </v-col>
   </v-row>
@@ -29,7 +40,8 @@ export default {
         { text: "상품명", value: "orderItems[0].itemName", sortable: false },
         { text: "주문수량", align: "center", value: "orderItems[0].orderQuantity", sortable: false },
         { text: "주문일자", value: "orderDate", sortable: false },
-        { text: "주문상태", align: "center", value: "orderStatus", sortable: false }
+        { text: "주문상태", align: "center", value: "orderStatus", sortable: false },
+        { text: "Actions", align: "center", value: "actions", sortable: false}
       ]
     }
   },
@@ -43,6 +55,22 @@ export default {
       .catch(e => {
         console.log(e);
       })
+    },
+    refreshList() {
+      this.getAllOrders();
+    },
+    cancelOrder(id) {
+      OrderDataService.cancelOrder(id)
+      .then(() => {
+        this.refreshList();
+      })
+      .catch(e => {
+        console.log(e);
+      })
+    },
+    getColor(orderStatus) {
+      if (orderStatus === 'CANCELED') return 'red';
+      else return 'blue';
     }
   },
   mounted() {
@@ -51,9 +79,9 @@ export default {
 }
 </script>
 <style>
-.list {
+.order_list {
   text-align: left;
-  max-width: 950px;
+  max-width: 1050px;
   margin: auto;
 }
 </style>

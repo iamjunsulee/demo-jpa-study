@@ -11,10 +11,7 @@ import me.junsu.demojpastudy.domain.OrderStatus;
 import me.junsu.demojpastudy.repository.SimpleOrderDto;
 import me.junsu.demojpastudy.repository.order.query.OrderQueryDto;
 import me.junsu.demojpastudy.service.OrderService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -105,6 +102,11 @@ public class OrderApiController {
     public CreateOrderResponse createOrder(@RequestBody CreateOrderRequest request) throws Exception {
         Long saveOrderId = orderService.createOrder(request);
         return new CreateOrderResponse(saveOrderId);
+    }
+
+    @PostMapping("/api/orders/{id}")
+    public void cancelOrder(@PathVariable Long id) {
+        orderService.cancelOrder(id);
     }
 
     @Data

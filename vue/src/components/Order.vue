@@ -150,6 +150,7 @@ export default {
             .then(response => {
               this.order.id = response.data.id;
               console.log(response.data);
+              this.$router.push({name: "orders"});
             })
             .catch(e => {
               console.log(e);

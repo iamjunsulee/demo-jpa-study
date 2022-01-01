@@ -11,6 +11,7 @@ import me.junsu.demojpastudy.repository.order.query.OrderQueryRepository;
 import me.junsu.demojpastudy.repository.SimpleOrderDto;
 import me.junsu.demojpastudy.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,7 @@ public class OrderService {
     }
 
     //주문취소
+    @Transactional
     public void cancelOrder(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(NoSuchElementException::new);
         order.cancel();

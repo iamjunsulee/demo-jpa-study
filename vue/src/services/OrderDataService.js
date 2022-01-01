@@ -7,5 +7,8 @@ class OrderDataService {
     getAllOrders() {
         return http.get("/api/v3_1/orders");
     }
+    cancelOrder(id) {
+        return http.post(`/api/orders/${id}`)
+    }
 }
 export default new OrderDataService();
