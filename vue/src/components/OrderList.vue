@@ -6,6 +6,7 @@
         <v-data-table
           :headers="headers"
           :items="orders"
+          :loading="loading"
           disable-pagination
           :hide-default-footer="true"
           >
@@ -42,18 +43,23 @@ export default {
         { text: "주문일자", value: "orderDate", sortable: false },
         { text: "주문상태", align: "center", value: "orderStatus", sortable: false },
         { text: "주문취소", align: "center", value: "cancel", sortable: false}
-      ]
+      ],
+      loading: false
     }
   },
   methods: {
     getAllOrders() {
+      if(this.loading) return;
+      this.loading = true;
       OrderDataService.getAllOrders()
       .then(response => {
         this.orders = response.data;
         console.log(response.data);
+        this.loading = false;
       })
       .catch(e => {
         console.log(e);
+        this.loading = false;
       })
     },
     refreshList() {

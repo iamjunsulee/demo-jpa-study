@@ -14,6 +14,7 @@
         <v-data-table
             :headers="headers"
             :items="members"
+            :loading="loading"
             disable-pagination
             :hide-default-footer="true"
         >
@@ -44,18 +45,23 @@ export default {
         { text: "Street", value: "address.street", sortable: false },
         { text: "Zipcode", value: "address.zipcode", sortable: false },
         { text: "Actions", value: "actions", sortable: false }
-      ]
+      ],
+      loading: false
     };
   },
   methods: {
     retrieveMembers() {
+      if(this.loading) return;
+      this.loading = true;
       MemberDataService.getAll()
           .then(response => {
             this.members = response.data.data;
+            this.loading = false;
             console.log(response.data);
           })
           .catch(e => {
             console.log(e);
+            this.loading = false;
           });
     },
     refreshList() {
