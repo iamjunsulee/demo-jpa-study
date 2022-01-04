@@ -4,7 +4,7 @@
       <v-text-field v-model="searchName" label="Search by Name"></v-text-field>
     </v-col>
     <v-col cols="12" sm="4">
-      <v-btn @click="searchByName();">
+      <v-btn @click="findAllMembers">
         Search
       </v-btn>
     </v-col>
@@ -25,6 +25,17 @@
         </v-data-table>
       </v-card>
     </v-col>
+
+    <v-col cols="12" sm="12">
+      <v-pagination
+        v-model="page"
+        :length="totalPages"
+        circle
+        next-icon="mdi-menu-right"
+        prev-icon="mdi-menu-left"
+        @input="pageChange"
+        ></v-pagination>
+    </v-col>
   </v-row>
 </template>
 
@@ -36,8 +47,6 @@ export default {
   data() {
     return {
       members: [],
-      currentMember: null,
-      currentIndex: -1,
       searchName: "",
       headers: [
         { text: "Name", align: "start", sortable: false, value: "name" },
@@ -46,36 +55,14 @@ export default {
         { text: "Zipcode", value: "address.zipcode", sortable: false },
         { text: "Actions", value: "actions", sortable: false }
       ],
-      loading: false
+      loading: false,
+      page: 1,
+      totalPages: 0
     };
   },
   methods: {
-    retrieveMembers() {
-      if(this.loading) return;
-      this.loading = true;
-      MemberDataService.getAll()
-          .then(response => {
-            this.members = response.data.data;
-            this.loading = false;
-            console.log(response.data);
-          })
-          .catch(e => {
-            console.log(e);
-            this.loading = false;
-          });
-    },
     refreshList() {
-      this.retrieveMembers();
-    },
-    searchByName() {
-      MemberDataService.findByName(this.searchName)
-          .then(response => {
-            this.members = response.data.data;
-            console.log(response.data.data);
-          })
-          .catch(e => {
-            console.log(e);
-          })
+      this.findAllMembers();
     },
     updateMember(id) {
       this.$router.push({ name: "member-details", params: { id: id } });
@@ -88,10 +75,45 @@ export default {
           .catch(e => {
             console.log(e);
           });
+    },
+    getRequestParams(searchName, page) {
+      let params = {};
+
+      if (searchName) {
+        params["name"] = searchName;
+      }
+
+      if (page) {
+        params["page"] = page - 1;
+      }
+      return params;
+    },
+    findAllMembers() {
+      if(this.loading) return;
+      this.loading = true;
+      const params = this.getRequestParams(this.searchName, this.page);
+
+      MemberDataService.findMembersWithPage(params)
+      .then(response => {
+        const { members, totalPages } = response.data;
+        this.members = members;
+        this.totalPages = totalPages;
+        this.loading = false;
+        console.log(response.data);
+      })
+      .catch(e => {
+        this.loading = false;
+        console.log(e);
+      })
+    },
+    pageChange(value) {
+      this.page = value;
+      this.findAllMembers();
     }
   },
   mounted() {
-    this.retrieveMembers();
+    //this.retrieveMembers();
+    this.findAllMembers();
   }
 };
 </script>

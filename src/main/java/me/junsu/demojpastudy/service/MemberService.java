@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import me.junsu.demojpastudy.api.MemberApiController;
 import me.junsu.demojpastudy.domain.Member;
 import me.junsu.demojpastudy.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,5 +42,13 @@ public class MemberService {
     public void updateMember(Long id, MemberApiController.MemberRequest request) {
         Member member = this.findById(id);
         member.updateMemberInfo(request.getName(), request.getAddress());
+    }
+
+    public Page<Member> getMemberListWithPage(Pageable pageable) {
+        return memberRepository.findAll(pageable);
+    }
+
+    public Page<Member> getMemberByNameWithPage(String name, Pageable pageable) {
+        return memberRepository.findByName(name, pageable);
     }
 }

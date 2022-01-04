@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import me.junsu.demojpastudy.domain.Address;
 import me.junsu.demojpastudy.domain.Member;
 import me.junsu.demojpastudy.service.MemberService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +60,24 @@ public class MemberApiController {
         //별도의 Result 클래스를 생성해서 사용하면 API 스펙 변경에 유연하다.
     }
 
+    @GetMapping("/api/members")
+    public PageResult<List<MemberDto>> getAllMembers(@RequestParam(required = false) String name, @RequestParam(defaultValue = "0") int page) {
+        Page<Member> memberPage;
+        Pageable paging = PageRequest.of(page, 5);
+
+        if (name == null || name.trim().isEmpty()) {
+            memberPage = memberService.getMemberListWithPage(paging);
+        }
+        else {
+            memberPage = memberService.getMemberByNameWithPage(name, paging);
+        }
+
+        List<Member> memberList = memberPage.getContent();
+        List<MemberDto> memberDto = memberList.stream()
+                .map(m -> new MemberDto(m.getId(), m.getName(), m.getAddress())).collect(Collectors.toList());
+
+        return new PageResult<>(memberDto, memberPage.getNumber(), memberPage.getTotalPages(), memberPage.getTotalElements());
+    }
 //    @GetMapping("/api/members/{name}")
 //    public Result<List<MemberDto>> getMemberByName(@PathVariable String name) {
 //        List<Member> memberList = memberService.findByName(name);
@@ -87,6 +108,15 @@ public class MemberApiController {
     static class Result<T> {
         private int count;
         private T data;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class PageResult<T> {
+        private T members;
+        private int currentPage;
+        private int totalPages;
+        private long totalMembers;
     }
 
     @Data

@@ -7,9 +7,6 @@ class MemberDataService {
     join(data) {
         return http.post("/api/v2/members", data);
     }
-    findByName(name) {
-        return http.get(`/api/v2/members?name=${name}`);
-    }
     findById(id) {
         return http.get(`/api/members/${id}`);
     }
@@ -18,6 +15,9 @@ class MemberDataService {
     }
     updateMember(id, data) {
         return http.put(`/api/members/${id}`, data);
+    }
+    findMembersWithPage(params) {
+        return http.get("/api/members", { params });
     }
 }
 export default new MemberDataService();
