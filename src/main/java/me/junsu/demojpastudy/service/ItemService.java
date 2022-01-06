@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import me.junsu.demojpastudy.api.ItemApiController;
 import me.junsu.demojpastudy.domain.Item;
 import me.junsu.demojpastudy.repository.ItemRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,10 @@ public class ItemService {
 
     public List<Item> getAllItems() {
         return itemRepository.findAll();
+    }
+
+    public Page<Item> getAllItemsWithPage(Pageable pageable) {
+        return itemRepository.findAll(pageable);
     }
 
     public void deleteById(Long id) {

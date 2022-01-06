@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import me.junsu.demojpastudy.domain.Book;
 import me.junsu.demojpastudy.domain.Item;
 import me.junsu.demojpastudy.service.ItemService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +35,17 @@ public class ItemApiController {
         return new Result<>(itemDtos);
     }
 
+    @GetMapping("/api/items")
+    public PageResult<List<ItemDto>> getAllItemsWithPage(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 2);
+        Page<Item> itemsWithPage = itemService.getAllItemsWithPage(pageable);
+        List<Item> items = itemsWithPage.getContent();
+        List<ItemDto> itemDtoList = items.stream()
+                .map(item -> new ItemDto(item.getId(), item.getName(), item.getPrice(), item.getStockQuantity()))
+                .collect(Collectors.toList());
+        return new PageResult<>(itemDtoList, itemsWithPage.getNumber(), itemsWithPage.getTotalPages(), itemsWithPage.getTotalElements());
+    }
+
     @GetMapping("/api/items/{id}")
     public Result<ItemDto> getItemById(@PathVariable Long id) {
         Item item = itemService.findById(id);
@@ -54,6 +68,15 @@ public class ItemApiController {
     @AllArgsConstructor
     static class Result<T> {
         private T data;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class PageResult<T> {
+        private T items;
+        private int currentPage;
+        private int totalPages;
+        private long totalItems;
     }
 
     @Data

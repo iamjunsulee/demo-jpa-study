@@ -17,6 +17,16 @@
         </v-data-table>
       </v-card>
     </v-col>
+    <v-col cols="12" sm="12">
+      <v-pagination
+          v-model="page"
+          :length="totalPages"
+          circle
+          next-icon="mdi-menu-right"
+          prev-icon="mdi-menu-left"
+          @input="pageChange"
+      ></v-pagination>
+    </v-col>
   </v-row>
 </template>
 <script>
@@ -27,25 +37,30 @@ export default {
   data() {
     return {
       items: [],
-      currentItem: null,
-      currentIndex: -1,
       headers: [
         { text: "Name", align: "start", sortable: false, value: "itemName" },
         { text: "StockQuantity", value: "stockQuantity", sortable: false },
         { text: "Price", value: "itemPrice", sortable: false },
         { text: "Actions", value: "actions", sortable: false }
       ],
-      loading: false
+      loading: false,
+      page: 1,
+      totalPages: 0
     };
   },
   methods: {
     findAllItems() {
       if(this.loading) return;
       this.loading = true;
-      ItemDataService.findAllItems()
+      const params = this.getRequestParams(this.page);
+
+      ItemDataService.findAllItems(params)
       .then(response => {
-        this.items = response.data.data;
+        const { items, totalPages } = response.data;
+        this.items = items;
+        this.totalPages = totalPages;
         this.loading = false;
+        console.log(response.data);
       })
       .catch(e => {
         console.log(e);
@@ -66,6 +81,18 @@ export default {
     },
     updateItem(id) {
       this.$router.push({name:"item-details", params: { id: id }})
+    },
+    pageChange(value) {
+      this.page = value;
+      this.findAllItems();
+    },
+    getRequestParams(page) {
+      let params = {};
+
+      if (page) {
+        params["page"] = page - 1;
+      }
+      return params;
     }
   },
   mounted() {

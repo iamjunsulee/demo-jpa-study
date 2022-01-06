@@ -4,8 +4,8 @@ class ItemDataService {
     addBook(data) {
         return http.post("/api/addBook", data);
     }
-    findAllItems() {
-        return http.get("/api/books");
+    findAllItems(params) {
+        return http.get("/api/items", { params });
     }
     deleteItem(id) {
         return http.delete(`/api/items/${id}`);
